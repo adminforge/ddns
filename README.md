@@ -19,12 +19,6 @@ You are welcome to try it out and use it in production.
 
 noip.at — proudly operated by [adminForge.de](https://adminforge.de/)
 
-### Alternatives
-
-There is at least one other hosted version of `pboehm/ddns` that
-[can be found via Google](https://www.google.com/search?q=pboehm%2Fddns+%22DDNS+is+a+project+that+lets+you+host+a+Dynamic+DNS+Service%2C+similar+to+DynDNS%2FNO-IP%2C+on+your+own+servers.%22)
-or you can host it yourself as described below.
-
 ## How can I update my IP if it changes?
 
 `ddns` is built around a small webservice, so that you can update your IP address simply by calling
