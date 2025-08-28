@@ -7,7 +7,7 @@ const indexTemplate string = `
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>DDNS</title>
+        <title>noip.at DynDNS</title>
 
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -108,36 +108,39 @@ const indexTemplate string = `
         <div class="container">
             <div class="header">
                 <ul class="nav nav-pills pull-right">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="https://github.com/pboehm/ddns">
+                    <li><a href="https://github.com/adminforge/ddns" target="_blank">
                         <i class="fa fa-github fa-lg"></i> Code</a></li>
                 </ul>
-                <h3 class="text-muted">DDNS</h3>
+                <h3 class="text-muted">noip.at DynDNS</h3>
             </div>
 
             <div class="jumbotron">
-                <h1>Self-Hosted Dynamic DNS</h1>
-
-                <p class="lead">DDNS is a project that lets you host a Dynamic
-                DNS Service, similar to DynDNS/NO-IP, on your own servers.</p>
+                <h2>Dynamic DNS Service</h2>
+                <p class="lead">free | no tracking | no logging</p>
 
                 <hr />
 
                 <form class="form-inline" role="form">
                     <div id="hostname_input" class="form-group">
                         <div class="input-group">
-                            <input id="hostname" class="form-control input-lg" type="text" placeholder="my-own-hostname">
+                            <input id="hostname" class="form-control input-lg" type="text" placeholder="your-hostname">
                             <div class="input-group-addon input-lg">{{.domain}}</div>
                         </div>
                     </div>
                 </form>
 
                 <hr />
+                <p><sub>* inactive hosts are deleted after 90 days</sub></p>
 
                 <input type="button" id="register" class="btn btn-primary disabled" value="Register Host" />
             </div>
 
             <div id="command_output"></div>
+
+            <div class="footer">
+		<p><strong>no tracking | no logging | no advertising</strong></p>
+		<p>noip.at proudly presented by <a href="https://adminforge.de/" target="_blank">adminForge.de</a> | <a href="https://adminforge.de/unterstuetzen/" target="_blank">Spenden</a> | <a href="https://adminforge.de/impressum/" target="_blank">Impressum</a> | <a href="https://adminforge.de/datenschutz/" target="_blank">Datenschutzhinweis</a></p>
+            </div>
 
         </div> <!-- /container -->
 
