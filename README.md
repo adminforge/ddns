@@ -7,16 +7,17 @@
 
 
 A self-hosted Dynamic DNS solution similar to DynDNS or NO-IP based on the
-[PowerDNS Remote Backend](https://doc.powerdns.com/md/authoritative/backend-remote/).
+[PowerDNS Remote Backend](https://doc.powerdns.com/authoritative/backends/remote.html).
 
 <img src="screenshot.png" alt="screenshot" width="500"/>
 
 
-## ⚠️⚠️⚠️ Note regarding hosted version at `ddns.pboehm.de`
+## Hosted Dynamic DNS service at noip.at
 
-The hosted `ddns` service with custom hosts under the `d.pboehm.de` domain (e.g `test.d.pboehm.de`) is not available
-anymore! I did not use this service for quite some time and recently there were some issues which resulted in downtime
-and expiration of all registered hosts.
+The hosted `ddns` service available at [noip.at](https://noip.at) is powered by this repository.
+You are welcome to try it out and use it in production.
+
+noip.at — proudly operated by [adminForge.de](https://adminforge.de/)
 
 ### Alternatives
 
@@ -27,7 +28,7 @@ or you can host it yourself as described below.
 ## How can I update my IP if it changes?
 
 `ddns` is built around a small webservice, so that you can update your IP address simply by calling
-an URL periodically through `curl`. Hosts that haven't been updated for 10 days will
+an URL periodically through `curl`. Hosts that haven't been updated for 90 days will
 be automatically removed. This can be configured in your own instance.
 
 An API similar to DynDNS/NO-IP has not been implemented yet.

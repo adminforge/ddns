@@ -1,159 +1,204 @@
 package frontend
 
-import (
-	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/pboehm/ddns/shared"
-	"html/template"
-	"log"
-	"net"
-	"net/http"
-	"regexp"
-)
+const indexTemplate string = `
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>noip.at DynDNS</title>
 
-type Frontend struct {
-	config *shared.Config
-	hosts  shared.HostBackend
-}
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
 
-func NewFrontend(config *shared.Config, hosts shared.HostBackend) *Frontend {
-	return &Frontend{
-		config: config,
-		hosts:  hosts,
-	}
-}
+        <!-- Optional theme -->
+        <style type="text/css" media="all">
+            /* Space out content a bit */
+            body {
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
 
-func (f *Frontend) Run() error {
-	r := gin.New()
-	r.Use(gin.Recovery())
+            /* Everything but the jumbotron gets side spacing for mobile first views */
+            .header,
+            .marketing,
+            .footer {
+                padding-right: 15px;
+                padding-left: 15px;
+            }
 
-	if f.config.Verbose {
-		r.Use(gin.Logger())
-	}
+            /* Custom page header */
+            .header {
+                border-bottom: 1px solid #e5e5e5;
+            }
+            /* Make the masthead heading the same height as the navigation */
+            .header h3 {
+                padding-bottom: 19px;
+                margin-top: 0;
+                margin-bottom: 0;
+                line-height: 40px;
+            }
 
-	r.SetHTMLTemplate(buildTemplate())
+            /* Custom page footer */
+            .footer {
+                padding-top: 19px;
+                color: #777;
+                border-top: 1px solid #e5e5e5;
+            }
 
-	r.GET("/", func(g *gin.Context) {
-		g.HTML(200, "index.html", gin.H{"domain": f.config.Domain})
-	})
+            /* Customize container */
+            @media (min-width: 768px) {
+                .container {
+                    max-width: 730px;
+                }
+            }
+            .container-narrow > hr {
+                margin: 30px 0;
+            }
 
-	r.GET("/available/:hostname", func(c *gin.Context) {
-		hostname, valid := isValidHostname(c.Params.ByName("hostname"))
+            /* Main marketing message and sign up button */
+            .jumbotron {
+                text-align: center;
+                border-bottom: 1px solid #e5e5e5;
+            }
+            .jumbotron .btn {
+                padding: 14px 24px;
+                font-size: 21px;
+            }
 
-		if valid {
-			_, err := f.hosts.GetHost(hostname)
-			valid = err != nil
-		}
+            /* Supporting marketing content */
+            .marketing {
+                margin: 40px 0;
+            }
+            .marketing p + h4 {
+                margin-top: 28px;
+            }
 
-		c.JSON(200, gin.H{
-			"available": valid,
-		})
-	})
+            /* Responsive: Portrait tablets and up */
+            @media screen and (min-width: 768px) {
+                /* Remove the padding we set earlier */
+                .header,
+                .marketing,
+                .footer {
+                    padding-right: 0;
+                    padding-left: 0;
+                }
+                /* Space out the masthead */
+                .header {
+                    margin-bottom: 30px;
+                }
+                /* Remove the bottom border on the jumbotron for visual effect */
+                .jumbotron {
+                    border-bottom: 0;
+                }
+            }
 
-	r.GET("/new/:hostname", func(c *gin.Context) {
-		hostname, valid := isValidHostname(c.Params.ByName("hostname"))
+        </style>
 
-		if !valid {
-			c.JSON(404, gin.H{"error": "This hostname is not valid"})
-			return
-		}
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <ul class="nav nav-pills pull-right">
+                    <li><a href="https://github.com/adminforge/ddns" target="_blank">
+                        <i class="fa fa-github fa-lg"></i> Code</a></li>
+                </ul>
+                <h3 class="text-muted">noip.at DynDNS</h3>
+            </div>
 
-		var err error
+            <div class="jumbotron">
+                <h2>Dynamic DNS Service</h2>
+                <p class="lead">free | no tracking | no logging</p>
 
-		if _, err := f.hosts.GetHost(hostname); err == nil {
-			c.JSON(403, gin.H{"error": "This hostname has already been registered."})
-			return
-		}
+                <hr />
 
-		host := &shared.Host{Hostname: hostname, Ip: "127.0.0.1"}
-		host.GenerateAndSetToken()
+                <form class="form-inline" role="form">
+                    <div id="hostname_input" class="form-group">
+                        <div class="input-group">
+                            <input id="hostname" class="form-control input-lg" type="text" placeholder="your-hostname">
+                            <div class="input-group-addon input-lg">{{.domain}}</div>
+                        </div>
+                    </div>
+                </form>
 
-		if err = f.hosts.SetHost(host); err != nil {
-			c.JSON(400, gin.H{"error": "Could not register host."})
-			return
-		}
+                <hr />
+                <p><sub>* inactive hosts are deleted after 90 days</sub></p>
 
-		c.JSON(200, gin.H{
-			"hostname":    host.Hostname,
-			"token":       host.Token,
-			"update_link": fmt.Sprintf("/update/%s/%s", host.Hostname, host.Token),
-		})
-	})
+                <input type="button" id="register" class="btn btn-primary disabled" value="Register Host" />
+            </div>
 
-	r.GET("/update/:hostname/:token", func(c *gin.Context) {
-		hostname, valid := isValidHostname(c.Params.ByName("hostname"))
-		token := c.Params.ByName("token")
+            <div id="command_output"></div>
 
-		if !valid {
-			c.JSON(404, gin.H{"error": "This hostname is not valid"})
-			return
-		}
+            <div class="footer">
+		<p><strong>no tracking | no logging | no advertising</strong></p>
+		<p>noip.at proudly presented by <a href="https://adminforge.de/" target="_blank">adminForge.de</a> | <a href="https://adminforge.de/unterstuetzen/" target="_blank">Spenden</a> | <a href="https://adminforge.de/impressum/" target="_blank">Impressum</a> | <a href="https://adminforge.de/datenschutz/" target="_blank">Datenschutzhinweis</a></p>
+            </div>
 
-		host, err := f.hosts.GetHost(hostname)
-		if err != nil {
-			c.JSON(404, gin.H{
-				"error": "This hostname has not been registered or is expired.",
-			})
-			return
-		}
+        </div> <!-- /container -->
 
-		if host.Token != token {
-			c.JSON(403, gin.H{
-				"error": "You have supplied the wrong token to manipulate this host",
-			})
-			return
-		}
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 
-		ip, err := extractRemoteAddr(c.Request)
-		if err != nil {
-			c.JSON(400, gin.H{
-				"error": "Your sender IP address is not in the right format",
-			})
-			return
-		}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
-		host.Ip = ip
-		if err = f.hosts.SetHost(host); err != nil {
-			c.JSON(400, gin.H{
-				"error": "Could not update registered IP address",
-			})
-		}
+        <script type="text/javascript" charset="utf-8">
 
-		c.JSON(200, gin.H{
-			"current_ip": ip,
-			"status":     "Successfuly updated",
-		})
-	})
+            function isValid() {
+                $('#register').removeClass("disabled");
+                $('#hostname_input').removeClass("has-error");
+                $('#hostname_input').addClass("has-success");
+            }
 
-	return r.Run(f.config.ListenFrontend)
-}
+            function isNotValid(argument) {
+                $('#register').addClass("disabled");
+                $('#hostname_input').removeClass("has-success");
+                $('#hostname_input').addClass("has-error");
+            }
 
-// Get the Remote Address of the client. At First we try to get the
-// X-Forwarded-For Header which holds the IP if we are behind a proxy,
-// otherwise the RemoteAddr is used
-func extractRemoteAddr(req *http.Request) (string, error) {
-	header_data, ok := req.Header["X-Forwarded-For"]
+            function validate() {
+                var hostname = $('#hostname').val();
 
-	if ok {
-		return header_data[0], nil
-	} else {
-		ip, _, err := net.SplitHostPort(req.RemoteAddr)
-		return ip, err
-	}
-}
+                $.getJSON("/available/" + hostname, function( data ) {
+                    if (data.available) {
+                        isValid();
+                    } else {
+                        isNotValid();
+                    }
+                }).error(function(){ isNotValid(); });
+            }
 
-// Get index template from bindata
-func buildTemplate() *template.Template {
-	html, err := template.New("index.html").Parse(indexTemplate)
-	if err != nil {
-		log.Fatal(err)
-	}
+            $(document).ready(function() {
+                var timer = null;
+                $('#hostname').on('keydown', function () {
+                    clearTimeout(timer);
+                    timer = setTimeout(validate, 800)
+                });
 
-	return html
-}
 
-func isValidHostname(host string) (string, bool) {
-	valid, _ := regexp.Match("^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?)$", []byte(host))
+                $('#register').click(function() {
+                    var hostname = $("#hostname").val();
 
-	return host, valid
-}
+                    $.getJSON("/new/" + hostname, function( data ) {
+                        console.log(data);
+
+                        var host = location.protocol + '//' + location.host;
+
+                        $("#command_output").append(
+                            "<pre>curl \"" + host +
+                            data.update_link + "\"</pre>");
+                    })
+                });
+            });
+        </script>
+    </body>
+</html>
+`
