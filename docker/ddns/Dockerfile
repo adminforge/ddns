@@ -8,8 +8,11 @@ COPY . .
 RUN GO111MODULE=on go get -d -v ./...
 RUN GO111MODULE=on go install -v ./...
 
-ENV GIN_MODE release
-ENV DDNS_EXPIRATION_DAYS 10
+ENV GIN_MODE=release
+ENV DDNS_EXPIRATION_DAYS=10
+
+EXPOSE 8080
+EXPOSE 8053
 
 CMD /go/bin/ddns \
     --domain=${DDNS_DOMAIN} \
