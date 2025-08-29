@@ -1,10 +1,11 @@
 package backend
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/pboehm/ddns/shared"
 	"log"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/pboehm/ddns/shared"
 )
 
 type Backend struct {
@@ -58,6 +59,12 @@ func (b *Backend) Run() error {
 	r.GET("/dnsapi/getAllDomainMetadata/:name", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"result": gin.H{"PRESIGNED": []string{"0"}},
+		})
+	})
+
+	r.GET("/dnsapi/getAllDomains", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"result": gin.H{"zone": b.config.SOAFqdn},
 		})
 	})
 
