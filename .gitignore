@@ -4,5 +4,6 @@
 dump.rdb
 /docker/.caddy_mount/
 /docker/.redis_mount/
+/docker/docker-compose.override.yml
 
 .idea
