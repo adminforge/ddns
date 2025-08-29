@@ -33,6 +33,8 @@ func (f *Frontend) Run() error {
 
 	r.SetHTMLTemplate(buildTemplate())
 
+	r.Static("/static", "/go/src/github.com/pboehm/ddns/static/")
+
 	r.GET("/", func(g *gin.Context) {
 		g.HTML(200, "index.html", gin.H{"domain": f.config.Domain})
 	})
@@ -154,6 +156,5 @@ func buildTemplate() *template.Template {
 
 func isValidHostname(host string) (string, bool) {
 	valid, _ := regexp.Match("^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?)$", []byte(host))
-
 	return host, valid
 }
