@@ -32,7 +32,7 @@ func (c *Config) Initialize() {
 	flag.StringVar(&c.RedisHost, "redis", ":6379",
 		"The Redis socket that should be used")
 
-	flag.IntVar(&c.HostExpirationDays, "expiration-days", 10,
+	flag.IntVar(&c.HostExpirationDays, "expiration-days", 90,
 		"The number of days after a host is released when it is not updated")
 
 	flag.BoolVar(&c.Verbose, "verbose", false,
