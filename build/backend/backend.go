@@ -2,6 +2,7 @@ package backend
 
 import (
 	"log"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -63,8 +64,12 @@ func (b *Backend) Run() error {
 	})
 
 	r.GET("/dnsapi/getAllDomains", func(c *gin.Context) {
+		host, _ := os.LookupEnv("DDNS_DOMAIN")
+		host = host + "."
 		c.JSON(200, gin.H{
-			"result": gin.H{"zone": b.config.SOAFqdn},
+			"result": []map[string]string{
+				{"id": "1", "zone": host, "type": "NATIVE"},
+			},
 		})
 	})
 
