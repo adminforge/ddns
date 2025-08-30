@@ -17,7 +17,7 @@ FROM gcr.io/distroless/static-debian12 AS run
 WORKDIR /
 
 COPY --from=build --chown=65532:65532 /app/ddns /app/ddns
-
+COPY ./static /app/static
 USER nonroot:nonroot
 
 ENV GIN_MODE=release

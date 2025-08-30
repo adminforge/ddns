@@ -34,7 +34,7 @@ func (f *Frontend) Run() error {
 
 	r.SetHTMLTemplate(buildTemplate())
 
-	r.Static("/static", "/go/src/github.com/pboehm/ddns/static/")
+	r.Static("/static", "/app/static/")
 
 	r.GET("/", func(g *gin.Context) {
 		g.HTML(200, "index.html", gin.H{"domain": f.config.Domain})
