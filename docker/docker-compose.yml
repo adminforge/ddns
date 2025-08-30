@@ -23,4 +23,4 @@ services:
 
   redis:
     restart: unless-stopped
-    image: redis:6-alpine
+    image: valkey/valkey:7-alpine
