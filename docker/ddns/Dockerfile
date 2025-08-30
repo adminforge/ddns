@@ -2,11 +2,11 @@ FROM golang:1.25 AS build
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY ./build/go.mod ./build/go.sum ./
 
 RUN go mod download
 
-COPY . ./
+COPY ./build/ ./
 
 RUN ls 
 
@@ -17,10 +17,10 @@ FROM gcr.io/distroless/static-debian12 AS run
 WORKDIR /
 
 COPY --from=build --chown=65532:65532 /app/ddns /app/ddns
-COPY ./static /app/static
+COPY ./build/static /app/static
 USER nonroot:nonroot
 
 ENV GIN_MODE=release
-ENV DDNS_EXPIRATION_DAYS=10
+ENV DDNS_EXPIRATION_DAYS=90
 
 CMD ["/app/ddns"] 

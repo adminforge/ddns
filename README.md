@@ -61,7 +61,7 @@ The setup included in this repository contains all the components described abov
 
 ```
 git clone git@github.com:adminforge/ddns.git
-cd ddns/docker
+cd ddns
 cp docker-compose.override.yml.sample docker-compose.override.yml
 ```
 
@@ -76,5 +76,5 @@ started automatically after reboot. For updating an existing installation use th
 rebuilds the containers.
 
 ```
-docker-compose --project-name ddns up -d --build
+docker compose up -d --build
 ```

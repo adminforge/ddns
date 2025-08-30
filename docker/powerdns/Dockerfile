@@ -1,6 +1,6 @@
 FROM buildpack-deps:trixie-curl
 
-# the setup procedure according to https://repo.powerdns.com/ (Debian 9 Stretch)
+# the setup procedure according to https://repo.powerdns.com/ (Debian 13 Trixie)
 RUN echo "deb [signed-by=/etc/apt/keyrings/auth-50-pub.asc] http://repo.powerdns.com/debian trixie-auth-50 main" > /etc/apt/sources.list.d/pdns.list \
     && echo "Package: pdns-*\nPin: origin repo.powerdns.com\nPin-Priority: 600\n" >> /etc/apt/preferences.d/pdns \
     && install -d /etc/apt/keyrings; curl https://repo.powerdns.com/FD380FBB-pub.asc | tee /etc/apt/keyrings/auth-50-pub.asc \

@@ -1,9 +1,9 @@
 *.swp
-/docker/docker-compose.*.yml
+/docker-compose.*.yml
 /ddns
 dump.rdb
-/docker/.caddy_mount/
-/docker/.redis_mount/
-/docker/docker-compose.override.yml
+/caddy-data/
+/redis-data/
+/docker-compose.override.yml
 
 .idea

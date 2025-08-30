@@ -11,7 +11,7 @@ services:
 
   redis:
     volumes:
-      - "${PWD}/.redis_mount:/data"
+      - "${PWD}/redis-data:/data"
 
   caddy:
     restart: unless-stopped
@@ -24,8 +24,8 @@ services:
       DDNS_CADDY_DOMAIN: ddns.example.net             # <<< ADJUST DOMAIN
       DDNS_CADDY_TLS_EMAIL: changeme@example.net      # <<< INSERT EMAIL
     volumes:
-      - "${PWD}/caddy/Caddyfile:/etc/Caddyfile"
-      - "${PWD}/.caddy_mount:/root/.caddy"
+      - "${PWD}/docker/caddy/Caddyfile:/etc/Caddyfile"
+      - "${PWD}/caddy-data:/root/.caddy"
     ports:
       - "80:80"
       - "443:443"
