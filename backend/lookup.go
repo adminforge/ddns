@@ -3,9 +3,10 @@ package backend
 import (
 	"errors"
 	"fmt"
-	"github.com/pboehm/ddns/shared"
 	"strings"
 	"time"
+
+	"github.com/pboehm/ddns/shared"
 )
 
 type Request struct {

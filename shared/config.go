@@ -2,7 +2,10 @@ package shared
 
 import (
 	"flag"
+	"fmt"
 	"log"
+	"os"
+	"strconv"
 	"strings"
 )
 
@@ -37,10 +40,12 @@ func (c *Config) Initialize() {
 
 	flag.BoolVar(&c.Verbose, "verbose", false,
 		"Be more verbose")
+
+	flag.Parse()
+	parseEnvConfig(c)
 }
 
 func (c *Config) Validate() {
-	flag.Parse()
 
 	if c.Domain == "" {
 		log.Fatal("You have to supply the domain via --domain=DOMAIN")
@@ -51,5 +56,29 @@ func (c *Config) Validate() {
 
 	if c.SOAFqdn == "" {
 		log.Fatal("You have to supply the server FQDN via --soa_fqdn=FQDN")
+	}
+}
+
+// parseEnvConfig overwrites configuration with values from the environment.
+func parseEnvConfig(cfg *Config) {
+	domain, got := os.LookupEnv("DDNS_DOMAIN")
+	if got {
+		cfg.Domain = domain
+	}
+	soaDomain, got := os.LookupEnv("DDNS_SOA_DOMAIN")
+	if got {
+		cfg.SOAFqdn = soaDomain
+	}
+	redisHost, got := os.LookupEnv("DDNS_REDIS_HOST")
+	if got {
+		cfg.RedisHost = redisHost
+	}
+	expDays, got := os.LookupEnv("DDNS_EXPIRATION_DAYS")
+	if got {
+		days, err := strconv.Atoi(expDays)
+		if err != nil {
+			panic(fmt.Errorf("Unexpected value for 'DDNS_EXPIRATION_DAYS' '%s': %w", expDays, err))
+		}
+		cfg.HostExpirationDays = days
 	}
 }

@@ -1,21 +1,26 @@
-FROM golang:alpine
+FROM golang:1.25 AS build
 
-RUN apk add --no-cache git
+WORKDIR /app
 
-WORKDIR /go/src/github.com/pboehm/ddns
-COPY . .
+COPY go.mod go.sum ./
 
-RUN GO111MODULE=on go get -d -v ./...
-RUN GO111MODULE=on go install -v ./...
+RUN go mod download
+
+COPY . ./
+
+RUN ls 
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o ddns
+
+FROM gcr.io/distroless/static-debian12 AS run
+
+WORKDIR /
+
+COPY --from=build --chown=65532:65532 /app/ddns /app/ddns
+
+USER nonroot:nonroot
 
 ENV GIN_MODE=release
-ENV DDNS_EXPIRATION_DAYS=90
+ENV DDNS_EXPIRATION_DAYS=10
 
-EXPOSE 8080
-EXPOSE 8053
-
-CMD /go/bin/ddns \
-    --domain=${DDNS_DOMAIN} \
-    --soa_fqdn=${DDNS_SOA_DOMAIN} \
-    --redis=${DDNS_REDIS_HOST} \
-    --expiration-days=${DDNS_EXPIRATION_DAYS}
+CMD ["/app/ddns"] 
