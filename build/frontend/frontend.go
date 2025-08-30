@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"regexp"
 
+	"github.com/adminforge/ddns/shared"
 	"github.com/gin-gonic/gin"
-	"github.com/pboehm/ddns/shared"
 )
 
 type Frontend struct {

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pboehm/ddns/shared"
+	"github.com/adminforge/ddns/shared"
 )
 
 type Request struct {
