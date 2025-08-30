@@ -2,6 +2,7 @@
 
 [![GitHub](https://img.shields.io/github/license/adminforge/ddns?style=flat)](https://github.com/adminforge/ddns)
 
+Original forked from [pboehm/ddns](https://github.com/pboehm/ddns)
 
 A self-hosted Dynamic DNS solution similar to DynDNS or NO-IP based on the
 [PowerDNS Remote Backend](https://doc.powerdns.com/authoritative/backends/remote.html).
