@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/adminforge/ddns/shared"
 	"github.com/gin-gonic/gin"
-	"github.com/pboehm/ddns/shared"
 )
 
 type Backend struct {

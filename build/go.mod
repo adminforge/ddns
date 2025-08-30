@@ -1,4 +1,4 @@
-module github.com/pboehm/ddns
+module github.com/adminforge/ddns
 
 go 1.25
 
