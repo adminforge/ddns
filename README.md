@@ -60,7 +60,7 @@ The setup included in this repository contains all the components described abov
 [caddy](https://caddyserver.com/) as a web server, because it provides automatic HTTPS using Lets Encrypt.
 
 ```
-git clone git@github.com:pboehm/ddns.git
+git clone git@github.com:adminforge/ddns.git
 cd ddns/docker
 cp docker-compose.override.yml.sample docker-compose.override.yml
 ```
