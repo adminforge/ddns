@@ -2,7 +2,7 @@ services:
   ddns:
     restart: unless-stopped
     build:
-      context: ..
+      context: .
       dockerfile: docker/ddns/Dockerfile
     depends_on:
       - redis
@@ -14,7 +14,7 @@ services:
   powerdns:
     restart: unless-stopped
     build:
-      context: powerdns/
+      context: docker/powerdns/
       dockerfile: Dockerfile
     depends_on:
       - ddns
