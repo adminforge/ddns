@@ -1,9 +1,6 @@
 *.swp
-/docker-compose.*.yml
 /ddns
 dump.rdb
 /caddy-data/
 /redis-data/
 /docker-compose.override.yml
-
-.idea
