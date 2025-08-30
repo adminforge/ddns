@@ -2,13 +2,14 @@ package frontend
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/pboehm/ddns/shared"
 	"html/template"
 	"log"
 	"net"
 	"net/http"
 	"regexp"
+
+	"github.com/gin-gonic/gin"
+	"github.com/pboehm/ddns/shared"
 )
 
 type Frontend struct {

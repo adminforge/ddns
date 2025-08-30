@@ -1,11 +1,12 @@
 package main
 
 import (
+	"log"
+
 	"github.com/pboehm/ddns/backend"
 	"github.com/pboehm/ddns/frontend"
 	"github.com/pboehm/ddns/shared"
 	"golang.org/x/sync/errgroup"
-	"log"
 )
 
 var serviceConfig *shared.Config = &shared.Config{}

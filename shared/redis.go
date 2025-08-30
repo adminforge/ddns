@@ -2,8 +2,9 @@ package shared
 
 import (
 	"errors"
-	"github.com/garyburd/redigo/redis"
 	"time"
+
+	"github.com/garyburd/redigo/redis"
 )
 
 type RedisBackend struct {
