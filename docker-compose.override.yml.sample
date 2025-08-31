@@ -15,9 +15,6 @@ services:
       PDNS_CARBON_OURNAME: example.net              # <<< ADJUST NAME or REMOVE LINE
     labels:
       - com.centurylinklabs.watchtower.enable=false
-    environment:
-      PDNS_CARBON_SERVER: 127.0.0.1                 # <<< ADJUST SERVER or REMOVE LINE
-      PDNS_CARBON_OURNAME: example.net              # <<< ADJUST NAME or REMOVE LINE
 
   redis:
     volumes:
