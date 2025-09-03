@@ -52,7 +52,7 @@ you have to create the following two DNS records:
 
 The setup is now automated using [docker-compose](https://docs.docker.com/compose/) and only some customization has
 to be made in a `docker-compose.override.yml` file
-(a [sample](./docker/docker-compose.override.yml.sample) is available here).
+(a [sample](./docker-compose.override.yml.sample) is available here).
 
 #### Configuring the Setup
 
