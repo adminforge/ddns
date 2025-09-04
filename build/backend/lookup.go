@@ -72,7 +72,7 @@ func (l *HostLookup) Lookup(request *Request) (*Response, error) {
 		return nil, errors.New("Invalid request")
 	}
 
-	return &Response{QType: responseRecord, QName: request.QName, Content: responseContent, TTL: 5}, nil
+	return &Response{QType: responseRecord, QName: request.QName, Content: responseContent, TTL: 300}, nil
 }
 
 // extractHostname extract the host part of the fqdn: pi.d.example.org -> pi
