@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/adminforge/ddns/backend"
-	"github.com/adminforge/ddns/frontend"
-	"github.com/adminforge/ddns/shared"
+	"github.com/adminforge/ddns/internal/backend"
+	"github.com/adminforge/ddns/internal/frontend"
+	"github.com/adminforge/ddns/internal/shared"
 	"golang.org/x/sync/errgroup"
 )
 

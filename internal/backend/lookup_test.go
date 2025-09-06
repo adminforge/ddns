@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/adminforge/ddns/shared"
+	"github.com/adminforge/ddns/internal/shared"
 	"github.com/stretchr/testify/assert"
 )
 

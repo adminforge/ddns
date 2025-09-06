@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/adminforge/ddns/shared"
+	"github.com/adminforge/ddns/internal/shared"
 	"github.com/gin-gonic/gin"
 )
 
