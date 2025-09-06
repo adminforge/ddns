@@ -64,7 +64,7 @@ func buildRequest(queryName, queryType string) *Request {
 }
 
 func TestRequestHandling(t *testing.T) {
-	_, _, lookup := buildLookup(".example.org")
+	c, _, lookup := buildLookup(".example.org")
 
 	response, err := lookup.Lookup(buildRequest("example.org", "SOA"))
 	assert.Nil(t, err)
@@ -72,7 +72,7 @@ func TestRequestHandling(t *testing.T) {
 	assert.Equal(t, "SOA", response.QType)
 	assert.Equal(t, "example.org", response.QName)
 	assert.Regexp(t, "dns\\.example\\.org\\. hostmaster\\.example.org\\. \\d+ 1800 3600 7200 5", response.Content)
-	assert.Equal(t, 5, response.TTL)
+	assert.Equal(t, c.RecordTTL, response.TTL)
 
 	response, err = lookup.Lookup(buildRequest("example.org", "NS"))
 	assert.Nil(t, err)
@@ -80,7 +80,7 @@ func TestRequestHandling(t *testing.T) {
 	assert.Equal(t, "NS", response.QType)
 	assert.Equal(t, "example.org", response.QName)
 	assert.Equal(t, "dns.example.org", response.Content)
-	assert.Equal(t, 5, response.TTL)
+	assert.Equal(t, c.RecordTTL, response.TTL)
 
 	response, err = lookup.Lookup(buildRequest("www.example.org", "ANY"))
 	assert.Nil(t, err)
@@ -88,7 +88,7 @@ func TestRequestHandling(t *testing.T) {
 	assert.Equal(t, "A", response.QType)
 	assert.Equal(t, "www.example.org", response.QName)
 	assert.Equal(t, "10.11.12.13", response.Content)
-	assert.Equal(t, 5, response.TTL)
+	assert.Equal(t, c.RecordTTL, response.TTL)
 
 	response, err = lookup.Lookup(buildRequest("www.example.org", "A"))
 	assert.Nil(t, err)
@@ -96,7 +96,7 @@ func TestRequestHandling(t *testing.T) {
 	assert.Equal(t, "A", response.QType)
 	assert.Equal(t, "www.example.org", response.QName)
 	assert.Equal(t, "10.11.12.13", response.Content)
-	assert.Equal(t, 5, response.TTL)
+	assert.Equal(t, c.RecordTTL, response.TTL)
 
 	// Allow hostname to be mixed case which is used by Let's Encrypt for a little bit more security
 	response, err = lookup.Lookup(buildRequest("wWW.eXaMPlE.oRg", "A"))
@@ -105,7 +105,7 @@ func TestRequestHandling(t *testing.T) {
 	assert.Equal(t, "A", response.QType)
 	assert.Equal(t, "wWW.eXaMPlE.oRg", response.QName)
 	assert.Equal(t, "10.11.12.13", response.Content)
-	assert.Equal(t, 5, response.TTL)
+	assert.Equal(t, c.RecordTTL, response.TTL)
 
 	response, err = lookup.Lookup(buildRequest("notexisting.example.org", "A"))
 	assert.NotNil(t, err)
@@ -118,7 +118,7 @@ func TestRequestHandling(t *testing.T) {
 	assert.Equal(t, "A", response.QType)
 	assert.Equal(t, "v4.example.org", response.QName)
 	assert.Equal(t, "10.10.10.10", response.Content)
-	assert.Equal(t, 5, response.TTL)
+	assert.Equal(t, c.RecordTTL, response.TTL)
 
 	response, err = lookup.Lookup(buildRequest("v4.example.org", "A"))
 	assert.Nil(t, err)
@@ -126,7 +126,7 @@ func TestRequestHandling(t *testing.T) {
 	assert.Equal(t, "A", response.QType)
 	assert.Equal(t, "v4.example.org", response.QName)
 	assert.Equal(t, "10.10.10.10", response.Content)
-	assert.Equal(t, 5, response.TTL)
+	assert.Equal(t, c.RecordTTL, response.TTL)
 
 	response, err = lookup.Lookup(buildRequest("v4.example.org", "AAAA"))
 	assert.NotNil(t, err)
@@ -138,7 +138,7 @@ func TestRequestHandling(t *testing.T) {
 	assert.Equal(t, "AAAA", response.QType)
 	assert.Equal(t, "v6.example.org", response.QName)
 	assert.Equal(t, "2001:db8:85a3::8a2e:370:7334", response.Content)
-	assert.Equal(t, 5, response.TTL)
+	assert.Equal(t, c.RecordTTL, response.TTL)
 
 	response, err = lookup.Lookup(buildRequest("v6.example.org", "AAAA"))
 	assert.Nil(t, err)
@@ -146,7 +146,7 @@ func TestRequestHandling(t *testing.T) {
 	assert.Equal(t, "AAAA", response.QType)
 	assert.Equal(t, "v6.example.org", response.QName)
 	assert.Equal(t, "2001:db8:85a3::8a2e:370:7334", response.Content)
-	assert.Equal(t, 5, response.TTL)
+	assert.Equal(t, c.RecordTTL, response.TTL)
 
 	response, err = lookup.Lookup(buildRequest("v6.example.org", "A"))
 	assert.NotNil(t, err)
