@@ -97,5 +97,25 @@ func (b *Backend) Run() error {
 		})
 	})
 
+	// If PowerDNS requests DomainInfo for the Zone, return Zone Configuration, else "false"
+	r.GET("/dnsapi/getDomainInfo/:name", func(c *gin.Context) {
+		host := strings.TrimPrefix(b.config.Domain, ".")
+		if !strings.HasSuffix(host, ".") {
+			host += "."
+		}
+
+		if c.Param("name") == host {
+			c.JSON(200, gin.H{
+				"result": []map[string]string{
+					{"id": "1", "zone": host, "type": "NATIVE"},
+				},
+			})
+		} else {
+			c.JSON(200, gin.H{
+				"result": false,
+			})
+		}
+	})
+
 	return r.Run(b.config.ListenBackend)
 }
