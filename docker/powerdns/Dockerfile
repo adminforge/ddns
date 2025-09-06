@@ -16,4 +16,6 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 EXPOSE 53
 
+ENV PDNS_ZONE_CACHE=true
+
 CMD ["pdns_server", "--daemon=no"]
