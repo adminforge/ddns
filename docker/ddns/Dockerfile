@@ -22,5 +22,6 @@ USER nonroot:nonroot
 
 ENV GIN_MODE=release
 ENV DDNS_EXPIRATION_DAYS=90
+ENV DDNS_TTL=300
 
 CMD ["/app/ddns"] 

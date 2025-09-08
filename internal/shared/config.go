@@ -17,6 +17,7 @@ type Config struct {
 	ListenFrontend     string
 	ListenBackend      string
 	RedisHost          string
+	RecordTTL          int
 }
 
 func (c *Config) Initialize() {
@@ -37,6 +38,9 @@ func (c *Config) Initialize() {
 
 	flag.IntVar(&c.HostExpirationDays, "expiration-days", 90,
 		"The number of days after a host is released when it is not updated")
+
+	flag.IntVar(&c.RecordTTL, "dns-ttl", 300,
+		"The TTL for a Record, which is returned by the ddns service")
 
 	flag.BoolVar(&c.Verbose, "verbose", false,
 		"Be more verbose")
@@ -81,4 +85,13 @@ func parseEnvConfig(cfg *Config) {
 		}
 		cfg.HostExpirationDays = days
 	}
+	ttl, got := os.LookupEnv("DDNS_TTL")
+	if got {
+		ttlInt, err := strconv.Atoi(ttl)
+		if err != nil {
+			panic(fmt.Errorf("Unexpected value for 'DDNS_TTL' '%s': %w", ttl, err))
+		}
+		cfg.RecordTTL = ttlInt
+	}
+
 }
