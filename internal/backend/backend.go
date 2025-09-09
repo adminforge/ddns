@@ -48,15 +48,17 @@ func (b *Backend) Run() error {
 			})
 		} else if request.QName == host {
 			/*
-				If the Requested Domain is the DNS Zone, then return SOA.
+				If the Requested Domain is the DNS Zone, then return SOA and NS record.
 				This is needed to have a valid Zone configuration for the Zone-Cache in PowerDNS.
 				If Requested Zone/Domain is not listed in Zone-Cache and feature is enabled,
 				PowerDNS rejects the request.
 			*/
 			request.QType = "SOA"
 			responseSOA, _ := b.lookup.Lookup(request)
+			request.QType = "NS"
+			responseNS, _ := b.lookup.Lookup(request)
 			c.JSON(200, gin.H{
-				"result": []*Response{responseSOA},
+				"result": []*Response{responseSOA, responseNS},
 			})
 		} else {
 			// Else case, means Domains is not found nor the Zone. Return "false"
