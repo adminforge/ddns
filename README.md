@@ -78,3 +78,16 @@ rebuilds the containers.
 ```
 docker compose up -d --build
 ```
+#### Available Environment Variables 
+... for further customization
+
+| Variable | Default       | Required | Description                                                                                                                                                                       |
+| --- |---------------| --- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| DDNS_DOMAIN | d.example.net | yes | DDNS Domain and Zone-Root-Domain                                                                                                                                                  |
+| DDNS_SOA_DOMAIN | ddns.example.net              | yes | NS Server and Domain for Frontend                                                                                                                                                 |
+| DDNS_EXPIRATION_DAYS | 90            | no | Days how long the dynamic DNS Record is valid                                                                                                                                     |
+| PDNS_CARBON_SERVER | empty         | no | Endpoint for collecting PDNS Metrics                                                                                                                                              |
+| PDNS_CARBON_OURNAME | empty         | no | Name of this Server for Metric collection                                                                                                                                         |
+| PDNS_ZONE_CACHE | true          | no | Zone-Cache Feature in PDNS refuses any requests whihc do not belong to configured Zone. Recommended to leave this on to increase security and the integrity of the DNS responses. |
+| DDNS_TTL | 300           | no | TTL of the DNS Records                                                                                                                                                            |
+
