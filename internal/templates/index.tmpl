@@ -1,0 +1,83 @@
+<!-- templates/index.tmpl -->
+{{define "title"}}noip.at DynDNS{{end}}
+
+{{define "styles"}}
+<style type="text/css" media="all">
+  body { padding-top: 20px; padding-bottom: 20px; }
+  .header, .marketing, .footer { padding-right: 15px; padding-left: 15px; }
+  .header { border-bottom: 1px solid #e5e5e5; }
+  .header h3 { padding-bottom: 19px; margin-top: 0; margin-bottom: 0; line-height: 40px; }
+  .footer { padding-top: 19px; color: #777; border-top: 1px solid #e5e5e5; }
+  @media (min-width: 768px) { .container { max-width: 730px; } }
+  .container-narrow > hr { margin: 30px 0; }
+  .jumbotron { text-align: center; border-bottom: 1px solid #e5e5e5; }
+  .jumbotron .btn { padding: 14px 24px; font-size: 21px; }
+  .marketing { margin: 40px 0; }
+  .marketing p + h4 { margin-top: 28px; }
+  @media screen and (min-width: 768px) {
+    .header, .marketing, .footer { padding-right: 0; padding-left: 0; }
+    .header { margin-bottom: 30px; }
+    .jumbotron { border-bottom: 0; }
+  }
+</style>
+{{end}}
+
+{{define "body"}}
+<div class="jumbotron">
+  <h2>Dynamic DNS Service</h2>
+  <p class="lead">free | no tracking | no logging</p>
+  <hr />
+  <form class="form-inline" role="form">
+    <div id="hostname_input" class="form-group">
+      <div class="input-group">
+        <input id="hostname" class="form-control input-lg" type="text" placeholder="your-hostname">
+        <div class="input-group-addon input-lg">{{.Domain}}</div>
+      </div>
+    </div>
+  </form>
+  <hr />
+  <p><sub>* inactive hosts are deleted after 90 days</sub></p>
+  <input type="button" id="register" class="btn btn-primary disabled" value="Register Host" />
+</div>
+<div id="command_output"></div>
+{{end}}
+
+{{define "scripts"}}
+<script type="text/javascript">
+  function isValid() {
+    $('#register').removeClass("disabled");
+    $('#hostname_input').removeClass("has-error");
+    $('#hostname_input').addClass("has-success");
+  }
+  function isNotValid() {
+    $('#register').addClass("disabled");
+    $('#hostname_input').removeClass("has-success");
+    $('#hostname_input').addClass("has-error");
+  }
+  function validate() {
+    var hostname = $('#hostname').val();
+    $.getJSON("/available/" + hostname, function(data) {
+      if (data.available) { isValid(); } else { isNotValid(); }
+    }).error(function(){ isNotValid(); });
+  }
+  $(document).ready(function() {
+    var timer = null;
+    $('#hostname').on('keydown', function () {
+      clearTimeout(timer);
+      timer = setTimeout(validate, 800)
+    });
+    $('#register').click(function() {
+      var hostname = $("#hostname").val();
+      $.getJSON("/new/" + hostname, function(data) {
+        var host = location.protocol + '//' + location.host;
+        $("#command_output").append(
+          "<pre>curl \"" + host + data.update_link + "\"</pre>"
+        );
+      })
+    });
+  });
+</script>
+{{end}}
+
+{{/* Final render: wrap into the layout */}}
+{{template "layout" .}}
