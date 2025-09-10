@@ -12,4 +12,8 @@ if [ "${PDNS_CARBON_OURNAME}" ]; then
   echo "carbon-ourname=${PDNS_CARBON_OURNAME}" >> "${CONFIG_FILE}"
 fi
 
+if [ "${PDNS_ZONE_CACHE}" = false ]; then
+  echo "zone-cache-refresh-interval=0" >> ${CONFIG_FILE}
+fi
+
 exec "$@"
