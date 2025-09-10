@@ -58,7 +58,7 @@
     var hostname = $('#hostname').val();
     $.getJSON("/available/" + hostname, function(data) {
       if (data.available) { isValid(); } else { isNotValid(); }
-    }).error(function(){ isNotValid(); });
+    }).fail(function(){ isNotValid(); });
   }
   $(document).ready(function() {
     var timer = null;
@@ -66,7 +66,7 @@
       clearTimeout(timer);
       timer = setTimeout(validate, 800)
     });
-    $('#register').click(function() {
+    $('#register').on("click",function() {
       var hostname = $("#hostname").val();
       $.getJSON("/new/" + hostname, function(data) {
         var host = location.protocol + '//' + location.host;
