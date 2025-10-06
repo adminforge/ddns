@@ -4,6 +4,7 @@
 {{define "styles"}}
 <style type="text/css" media="all">
   body { padding-top: 20px; padding-bottom: 20px; }
+  pre { font-size: 0.75em; }
   .header, .marketing, .footer { padding-right: 15px; padding-left: 15px; }
   .header { border-bottom: 1px solid #e5e5e5; }
   .header h3 { padding-bottom: 19px; margin-top: 0; margin-bottom: 0; line-height: 40px; }
@@ -23,21 +24,23 @@
 {{end}}
 
 {{define "body"}}
-<div class="jumbotron">
-  <h2>Dynamic DNS Service</h2>
-  <p class="lead">free | no tracking | no logging</p>
-  <hr />
-  <form class="form-inline" role="form">
-    <div id="hostname_input" class="form-group">
-      <div class="input-group">
-        <input id="hostname" class="form-control input-lg" type="text" placeholder="your-hostname">
-        <div class="input-group-addon input-lg">{{.domain}}</div>
-      </div>
+<div class="jumbotron p-5 mb-5 bg-body-secondary rounded">
+    <div class="container-fluid py-5">
+        <h2>Dynamic DNS Service</h2>
+        <p class="lead fs-2">free | no tracking | no logging</p>
+        <hr />
+        <form class="form-inline" role="form">
+            <div id="hostname_input" class="form-group">
+                <div class="input-group has-validation">
+                    <input id="hostname" class="form-control input-lg rounded-start rounded-end-0" type="text" placeholder="your-hostname">
+                    <div id="hostname_group" class="input-group-text input-lg">{{.domain}}</div>
+                </div>
+            </div>
+        </form>
+        <hr />
+        <p><sub>* inactive hosts are deleted after {{.expiration}} days</sub></p>
+        <input type="button" id="register" class="btn btn-primary disabled" value="Register Host" />
     </div>
-  </form>
-  <hr />
-  <p><sub>* inactive hosts are deleted after 90 days</sub></p>
-  <input type="button" id="register" class="btn btn-primary disabled" value="Register Host" />
 </div>
 <div id="command_output"></div>
 {{end}}
@@ -46,13 +49,17 @@
 <script type="text/javascript">
   function isValid() {
     $('#register').removeClass("disabled");
-    $('#hostname_input').removeClass("has-error");
-    $('#hostname_input').addClass("has-success");
+    $('#hostname').removeClass("is-invalid");
+    $('#hostname').addClass("is-valid");
+    $('#hostname_group').addClass("bg-success-subtle border-success");
+    $('#hostname_group').removeClass("bg-danger-subtle border-danger");
   }
   function isNotValid() {
     $('#register').addClass("disabled");
-    $('#hostname_input').removeClass("has-success");
-    $('#hostname_input').addClass("has-error");
+    $('#hostname').removeClass("is-valid");
+    $('#hostname').addClass("is-invalid");
+    $('#hostname_group').removeClass("bg-success-subtle border-success");
+    $('#hostname_group').addClass("bg-danger-subtle border-danger");
   }
   function validate() {
     var hostname = $('#hostname').val();
@@ -71,7 +78,7 @@
       $.getJSON("/new/" + hostname, function(data) {
         var host = location.protocol + '//' + location.host;
         $("#command_output").append(
-          "<pre>curl \"" + host + data.update_link + "\"</pre>"
+          "<pre class='bg-warning border-1 p-2 rounded'>curl \"" + host + data.update_link + "\"</pre>"
         );
       })
     });

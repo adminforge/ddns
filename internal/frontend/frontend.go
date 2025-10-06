@@ -38,7 +38,7 @@ func (f *Frontend) Run() error {
 	r.Static("/static", "/app/static/")
 
 	r.GET("/", func(g *gin.Context) {
-		g.HTML(200, "index.tmpl", gin.H{"domain": f.config.Domain})
+		g.HTML(200, "index.tmpl", gin.H{"domain": f.config.Domain, "expiration": f.config.HostExpirationDays})
 	})
 
 	r.GET("/available/:hostname", func(c *gin.Context) {
