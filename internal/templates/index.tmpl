@@ -26,41 +26,58 @@
 {{define "scripts"}}
 <script type="text/javascript">
   function isValid() {
-    $('#register').removeClass("disabled");
-    $('#hostname').removeClass("is-invalid");
-    $('#hostname').addClass("is-valid");
-    $('#hostname_group').addClass("bg-success-subtle border-success");
-    $('#hostname_group').removeClass("bg-danger-subtle border-danger");
+      document.getElementById('register').classList.remove('disabled');
+      document.getElementById('hostname').classList.remove('is-invalid');
+      document.getElementById('hostname').classList.add('is-valid');
+      document.getElementById('hostname_group').classList.add('bg-success-subtle');
+      document.getElementById('hostname_group').classList.remove('bg-danger-subtle');
+      document.getElementById('hostname_group').classList.add('border-success');
+      document.getElementById('hostname_group').classList.remove('border-danger');
   }
   function isNotValid() {
-    $('#register').addClass("disabled");
-    $('#hostname').removeClass("is-valid");
-    $('#hostname').addClass("is-invalid");
-    $('#hostname_group').removeClass("bg-success-subtle border-success");
-    $('#hostname_group').addClass("bg-danger-subtle border-danger");
+      document.getElementById('register').classList.add('disabled');
+      document.getElementById('hostname').classList.add('is-invalid');
+      document.getElementById('hostname').classList.remove('is-valid');
+      document.getElementById('hostname_group').classList.remove('bg-success-subtle');
+      document.getElementById('hostname_group').classList.add('bg-danger-subtle');
+      document.getElementById('hostname_group').classList.remove('border-success');
+      document.getElementById('hostname_group').classList.add('border-danger');
   }
-  function validate() {
-    var hostname = $('#hostname').val();
-    $.getJSON("/available/" + hostname, function(data) {
-      if (data.available) { isValid(); } else { isNotValid(); }
-    }).fail(function(){ isNotValid(); });
+  async function validate() {
+    let hostname = document.getElementById('hostname').value;
+    await fetch("/available/" + hostname)
+        .then(res => res.json())
+        .then(data => {
+            if (data.available) { isValid(); } else { isNotValid(); }
+        }).catch(function(){ isNotValid(); });
   }
-  $(document).ready(function() {
-    var timer = null;
-    $('#hostname').on('keydown', function () {
-      clearTimeout(timer);
-      timer = setTimeout(validate, 800)
-    });
-    $('#register').on("click",function() {
-      var hostname = $("#hostname").val();
-      $.getJSON("/new/" + hostname, function(data) {
-        var host = location.protocol + '//' + location.host;
-        $("#command_output").append(
-          "<pre class='bg-warning border-1 p-2 rounded'>curl \"" + host + data.update_link + "\"</pre>"
-        );
+
+  let ready = (callback) => {
+      document.addEventListener('DOMContentLoaded', callback);
+  }
+
+  ready(() => {
+      let timer = null;
+      document.getElementById('hostname').addEventListener('keydown', function () {
+        clearTimeout(timer);
+        timer = setTimeout(validate, 800)
+      });
+      document.getElementById('register').addEventListener('click', function () {
+          let hostname = document.getElementById('hostname').value;
+          fetch("/new/" + hostname)
+              .then(res => res.json())
+              .then(data => {
+                  let host = location.protocol + '//' + location.host;
+                  let element = document.createElement('pre');
+                  element.classList.add('bg-warning-subtle');
+                  element.classList.add('border-1');
+                  element.classList.add('p-2');
+                  element.classList.add('rounded');
+                  element.innerHTML = "curl \"" + host + data.update_link + "\"";
+                  document.getElementById('command_output').appendChild(element);
+              }).catch(function(){ isNotValid(); });
       })
-    });
-  });
+  })
 </script>
 {{end}}
 
