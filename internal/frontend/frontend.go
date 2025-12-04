@@ -124,7 +124,7 @@ func (f *Frontend) Run() error {
 
 		c.JSON(200, gin.H{
 			"current_ip": ip,
-			"status":     "Successfuly updated",
+			"status":     "Successfully updated",
 		})
 	})
 
