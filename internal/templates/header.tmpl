@@ -5,13 +5,11 @@
         <div class="col-9 text-start">
             <h3 class="text-secondary my-auto">
                 <img src="/static/img/logo.png" alt="noip.at DynDNS" width="60" height="60">
-                noip.at DynDNS
+                {{template "title" .}}
             </h3>
         </div>
         <div class="col-3 text-end my-auto">
-            <a href="https://github.com/adminforge/ddns" target="_blank">
-                <i class="fa fa-github fa-lg"></i> Code
-            </a>
+            {{template "github" .}}
         </div>
     </div>
 </div>
