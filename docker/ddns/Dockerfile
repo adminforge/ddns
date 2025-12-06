@@ -17,8 +17,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . ./
-COPY --from=sass /theme/custom-header.tmpl* ./internal/templates/custom-header.tmpl
-COPY --from=sass /theme/custom-header.tmpl* ./internal/templates/custom-footer.tmpl
+COPY --from=sass /theme/custom.tmpl* ./internal/templates/custom.tmpl
 
 RUN ls 
 

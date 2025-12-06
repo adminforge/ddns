@@ -6,12 +6,16 @@
 // 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
 @import "node_modules/bootstrap/scss/functions";
 
+// ---- START Customizations with maniplating the Theme Colors below ----
 // 2. Include any default variable overrides here
+// Primary color and butons
 $primary: #235397;
+// used for background
 $secondary: #777;
 $tertiary: #e5e5e5;
 $enable-dark-mode: true;
 
+// ---- STOP Customizations here, theme is now customized via above variables ----
 // remove link decoration and make dark mode automatically switching on media query
 $color-mode-type: media-query;
 $link-decoration: none;
