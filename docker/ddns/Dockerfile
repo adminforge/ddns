@@ -1,4 +1,4 @@
-FROM node:22 AS sass
+FROM node:24 AS sass
 
 WORKDIR /theme
 
