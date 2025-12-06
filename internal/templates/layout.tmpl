@@ -1,22 +1,15 @@
 <!-- templates/layout.tmpl -->
 {{define "styles"}}
     <style media="all">
-        body { padding-top: 20px; padding-bottom: 20px; }
-        pre { font-size: 0.75em; }
-        .header, .footer { padding-right: 15px; padding-left: 15px; }
-        .header { border-bottom: 1px solid #e5e5e5; padding-bottom: 20px;}
-        .header h3 { line-height: 40px; }
-        .footer { padding-top: 19px; color: #777; border-top: 1px solid #e5e5e5; }
-        @media (min-width: 768px) {
-            .container { max-width: 730px; }
-        }
-        .container-narrow > hr { margin: 30px 0; }
         .jumbotron { text-align: center; border-bottom: 1px solid #e5e5e5; }
         .jumbotron .btn { padding: 14px 24px; font-size: 21px; }
-        @media screen and (min-width: 768px) {
-            .header, .marketing, .footer { padding-right: 0; padding-left: 0; }
-            .header { margin-bottom: 30px; }
-            .jumbotron { border-bottom: 0; }
+        @media (min-width: 768px) {
+            .container {
+                max-width: 730px;
+            }
+        }
+        .form-inline {
+            max-width: 300px;
         }
     </style>
 {{end}}
@@ -30,7 +23,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{template "title" .}}</title>
   <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/theme.css">
   <link rel="stylesheet" href="/static/css/font-awesome.min.css">
   {{template "styles" .}}
 </head>
