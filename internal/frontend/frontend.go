@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"regexp"
+	"strings"
 
 	"github.com/adminforge/ddns/internal/shared"
 	"github.com/adminforge/ddns/internal/templates"
@@ -160,5 +161,6 @@ func buildTemplate() *template.Template {
 
 func isValidHostname(host string) (string, bool) {
 	valid, _ := regexp.Match("^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?)$", []byte(host))
+	host = strings.ToLower(host)
 	return host, valid
 }
