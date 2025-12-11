@@ -7,8 +7,10 @@ import (
 	"net"
 	"net/http"
 	"regexp"
+	"strings"
 
 	"github.com/adminforge/ddns/internal/shared"
+	"github.com/adminforge/ddns/internal/templates"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,7 +39,7 @@ func (f *Frontend) Run() error {
 	r.Static("/static", "/app/static/")
 
 	r.GET("/", func(g *gin.Context) {
-		g.HTML(200, "index.html", gin.H{"domain": f.config.Domain})
+		g.HTML(200, "index.tmpl", gin.H{"domain": f.config.Domain, "expiration": f.config.HostExpirationDays})
 	})
 
 	r.GET("/available/:hostname", func(c *gin.Context) {
@@ -131,23 +133,25 @@ func (f *Frontend) Run() error {
 	return r.Run(f.config.ListenFrontend)
 }
 
-// Get the Remote Address of the client. At First we try to get the
+// Get the Remote Address of the client. At First, we try to get the
 // X-Forwarded-For Header which holds the IP if we are behind a proxy,
 // otherwise the RemoteAddr is used
 func extractRemoteAddr(req *http.Request) (string, error) {
-	header_data, ok := req.Header["X-Forwarded-For"]
+	headerData, ok := req.Header["X-Forwarded-For"]
 
 	if ok {
-		return header_data[0], nil
+		return headerData[0], nil
 	} else {
 		ip, _, err := net.SplitHostPort(req.RemoteAddr)
 		return ip, err
 	}
 }
 
-// Get index template from bindata
+// Get the index template from bindata
 func buildTemplate() *template.Template {
-	html, err := template.New("index.html").Parse(indexTemplate)
+	html, err := template.New("index.tmpl").ParseFS(templates.FS,
+		"*.tmpl",
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -157,5 +161,6 @@ func buildTemplate() *template.Template {
 
 func isValidHostname(host string) (string, bool) {
 	valid, _ := regexp.Match("^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?)$", []byte(host))
+	host = strings.ToLower(host)
 	return host, valid
 }

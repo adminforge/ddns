@@ -17,7 +17,7 @@ func (b *testHostBackend) GetHost(hostname string) (*shared.Host, error) {
 	if ok {
 		return host, nil
 	} else {
-		return nil, errors.New("Host not found")
+		return nil, errors.New("Host not found.")
 	}
 }
 

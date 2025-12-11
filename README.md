@@ -91,3 +91,14 @@ docker compose up -d --build
 | powerdns | PDNS_CARBON_OURNAME  | empty                | no | Name of this Server for Metric collection                                                                                                                                         |
 | powerdns | PDNS_ZONE_CACHE      | true                 | no | Zone-Cache Feature in PDNS refuses any requests whihc do not belong to configured Zone. Recommended to leave this on to increase security and the integrity of the DNS responses. |
 
+### Theming
+
+There are serveral areas of the frontend that can be customized. The Customization is split into three parts:
+- Favicon and Logo in the header
+- Colors in the frontend through CSS Variables
+- Title, Slogan and Footer through custom templates
+
+Thening is done in the folder `/theme` and can be customized by editing resp. adding the files in this folder.
+- For logo and favicon use `logo.png` and `favicon.ico`. Simply place these files in the `/theme` folder.
+- For Coluring change the eg. primary variable in `theme.scss`. You might want to add additional boostrap features, but don't remove the existing ones. Otherwise the frontend will break.
+- For Title, Slogan and Footer use the `sample.custom.tmpl` file and rename it to `custom.tmpl`. With changing the content of the templates, you can customize the frontend as you like.

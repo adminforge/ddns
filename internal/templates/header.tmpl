@@ -1,0 +1,16 @@
+<!-- templates/header.tmpl -->
+{{define "header"}}
+<div class="header py-4 text-secondary border-bottom border-tertiary border-1">
+    <div class="row algin-items-center">
+        <div class="col-9 text-start">
+            <h3 class="text-secondary my-auto">
+                <img src="/static/img/logo.png" alt="noip.at DynDNS" width="60" height="60">
+                {{template "title" .}}
+            </h3>
+        </div>
+        <div class="col-3 text-end my-auto">
+            {{template "github" .}}
+        </div>
+    </div>
+</div>
+{{end}}

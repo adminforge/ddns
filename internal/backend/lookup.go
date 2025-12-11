@@ -69,7 +69,7 @@ func (l *HostLookup) Lookup(request *Request) (*Response, error) {
 		}
 
 	default:
-		return nil, errors.New("Invalid request")
+		return nil, errors.New("Invalid request.")
 	}
 
 	return &Response{QType: responseRecord, QName: request.QName, Content: responseContent, TTL: l.config.RecordTTL}, nil
@@ -85,7 +85,7 @@ func (l *HostLookup) extractHostname(rawQueryName string) (string, error) {
 	}
 
 	if hostname == "" {
-		return "", errors.New("Query name does not correspond to our domain")
+		return "", errors.New("Query name does not correspond to our domain.")
 	}
 
 	return hostname, nil

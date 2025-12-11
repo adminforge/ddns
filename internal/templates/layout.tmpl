@@ -1,0 +1,39 @@
+<!-- templates/layout.tmpl -->
+{{define "styles"}}
+    <style media="all">
+        .jumbotron { text-align: center; border-bottom: 1px solid #e5e5e5; }
+        .jumbotron .btn { padding: 14px 24px; font-size: 21px; }
+        @media (min-width: 768px) {
+            .container {
+                max-width: 730px;
+            }
+        }
+        .form-inline {
+            max-width: 300px;
+        }
+    </style>
+{{end}}
+
+{{define "layout"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{template "title" .}}</title>
+  <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/static/css/theme.css">
+  <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+  {{template "styles" .}}
+</head>
+<body>
+  <div class="container">
+    {{template "header" .}}
+    {{template "body" .}}
+    {{template "footer" .}}
+  </div>
+  {{template "scripts" .}}
+</body>
+</html>
+{{end}}

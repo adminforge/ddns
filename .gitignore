@@ -7,3 +7,4 @@ dump.rdb
 /redis-data/
 
 .idea
+*/node_modules

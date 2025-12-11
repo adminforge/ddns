@@ -9,7 +9,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-var serviceConfig *shared.Config = &shared.Config{}
+var serviceConfig = &shared.Config{}
 
 func init() {
 	serviceConfig.Initialize()
