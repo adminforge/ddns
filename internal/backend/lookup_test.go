@@ -152,3 +152,26 @@ func TestRequestHandling(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Nil(t, response)
 }
+
+func TestBlockedHostnames(t *testing.T) {
+	c, _, lookup := buildLookup(".example.org")
+	c.BlockedHostnames = map[string]bool{"www": true}
+
+	for _, qtype := range []string{"A", "AAAA", "ANY"} {
+		response, err := lookup.Lookup(buildRequest("www.example.org", qtype))
+		assert.NotNil(t, err)
+		assert.Nil(t, response)
+	}
+
+	response, err := lookup.Lookup(buildRequest("WwW.eXaMPlE.oRg", "A"))
+	assert.NotNil(t, err)
+	assert.Nil(t, response)
+
+	response, err = lookup.Lookup(buildRequest("v4.example.org", "A"))
+	assert.Nil(t, err)
+	assert.Equal(t, "10.10.10.10", response.Content)
+
+	response, err = lookup.Lookup(buildRequest("example.org", "SOA"))
+	assert.Nil(t, err)
+	assert.NotNil(t, response)
+}

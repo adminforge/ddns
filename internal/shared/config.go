@@ -18,6 +18,14 @@ type Config struct {
 	ListenBackend      string
 	RedisHost          string
 	RecordTTL          int
+	BlockedHostnames   map[string]bool
+}
+
+// IsHostnameBlocked reports whether a hostname has been administratively
+// blocked (e.g. following an abuse report) and must not be
+// available for (re-)registration.
+func (c *Config) IsHostnameBlocked(hostname string) bool {
+	return c.BlockedHostnames[strings.ToLower(hostname)]
 }
 
 func (c *Config) Initialize() {
@@ -92,6 +100,16 @@ func parseEnvConfig(cfg *Config) {
 			panic(fmt.Errorf("Unexpected value for 'DDNS_TTL' '%s': %w", ttl, err))
 		}
 		cfg.RecordTTL = ttlInt
+	}
+	blockedHostnames, got := os.LookupEnv("DDNS_BLOCKED_HOSTNAMES")
+	if got {
+		cfg.BlockedHostnames = make(map[string]bool)
+		for _, hostname := range strings.Split(blockedHostnames, ",") {
+			hostname = strings.ToLower(strings.TrimSpace(hostname))
+			if hostname != "" {
+				cfg.BlockedHostnames[hostname] = true
+			}
+		}
 	}
 
 }

@@ -45,6 +45,10 @@ func (f *Frontend) Run() error {
 	r.GET("/available/:hostname", func(c *gin.Context) {
 		hostname, valid := isValidHostname(c.Params.ByName("hostname"))
 
+		if valid && f.config.IsHostnameBlocked(hostname) {
+			valid = false
+		}
+
 		if valid {
 			_, err := f.hosts.GetHost(hostname)
 			valid = err != nil
@@ -60,6 +64,11 @@ func (f *Frontend) Run() error {
 
 		if !valid {
 			c.JSON(404, gin.H{"error": "This hostname is not valid"})
+			return
+		}
+
+		if f.config.IsHostnameBlocked(hostname) {
+			c.JSON(403, gin.H{"error": "This hostname is not available for registration."})
 			return
 		}
 
@@ -91,6 +100,11 @@ func (f *Frontend) Run() error {
 
 		if !valid {
 			c.JSON(404, gin.H{"error": "This hostname is not valid"})
+			return
+		}
+
+		if f.config.IsHostnameBlocked(hostname) {
+			c.JSON(403, gin.H{"error": "This hostname has been blocked."})
 			return
 		}
 

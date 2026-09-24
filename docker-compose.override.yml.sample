@@ -4,6 +4,7 @@ services:
       DDNS_DOMAIN: d.example.net                      # <<< ADJUST DOMAIN
       DDNS_SOA_DOMAIN: ddns.example.net               # <<< ADJUST DOMAIN
       DDNS_EXPIRATION_DAYS: 90
+      # DDNS_BLOCKED_HOSTNAMES: abused,phishing       # hostnames blocked from registration and resolution
     labels:
       - com.centurylinklabs.watchtower.enable=false
 

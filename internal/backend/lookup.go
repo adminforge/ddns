@@ -52,6 +52,10 @@ func (l *HostLookup) Lookup(request *Request) (*Response, error) {
 			return nil, err
 		}
 
+		if l.config.IsHostnameBlocked(hostname) {
+			return nil, errors.New("Hostname is blocked.")
+		}
+
 		var host *shared.Host
 		if host, err = l.hosts.GetHost(hostname); err != nil {
 			return nil, err
